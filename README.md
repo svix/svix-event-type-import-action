@@ -7,9 +7,7 @@
 
 # Upload Event Types to Svix - GitHub Action
 
-This GitHub action uploads Event Types from an OpenAPI spec to Svix.
-
-This action reads and uploads an OpenAPI spec (in JSON or YAML) format and uploads it to Svix to create event types for your webhooks.
+This GitHub action reads and uploads an OpenAPI spec (in JSON or YAML) format and uploads it to Svix to create event types for your webhooks.
 For more information, check out [our docs](https://docs.svix.com/event-types#upload-openapi-specification).
 
 ## Inputs
