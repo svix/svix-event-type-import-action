@@ -1,0 +1,30 @@
+name: 'Upload Event Types to Svix'
+description: 'Upload Event Types from an OpenAPI spec to Svix'
+inputs:
+  openapi-file:
+    description: 'Location of the OpenAPI spec file'
+    required: true
+  svix-api-key:
+    description: 'Svix API key'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: mikefarah/yq@v4.35.2
+    - run: |
+        TMPFILE=$(mktemp)
+        echo $TMPFILE
+        cp ${{inputs.openapi-file}} $TMPFILE
+      shell: bash
+    - name: Transform YAML to JSON
+      if: ${{ endsWith(inputs.openapi-file, '.yml') }}
+      run: yq -o=json ${{inputs.openapi-file}} > $TMPFILE
+      shell: bash
+    - name: Upload OpenAPI spec to Svix
+      run: |
+        curl -X 'POST' 'https://api.us.svix.com/api/v1/event-type/import/openapi/' \
+            -H 'Authorization: Bearer ${{ inputs.svix-api-key }}' \
+            -H 'Accept: application/json' \
+            -H 'Content-Type: application/json' \
+            --data-binary @$TMPFILE
+      shell: bash
