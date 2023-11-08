@@ -7,10 +7,9 @@ inputs:
   svix-api-key:
     description: 'Svix API key'
     required: true
-  svix-region:
-    description: 'Svix region: us or eu'
+  svix-api-url:
+    description: 'Override Svix API URL'
     required: false
-    default: 'us'
 runs:
   using: "composite"
   steps:
@@ -20,20 +19,36 @@ runs:
           echo "OpenAPI spec file not found"
           exit 1
         fi
-
-        if [ "${{inputs.svix-region}}" != "us" ] && [ "${{inputs.svix-region}}" != "eu" ]; then
-          echo "Svix region must be either us or eu"
-          exit 1
+      shell: bash
+    - name: Determine Svix API URL
+      run: |
+        if [ "${{ inputs.svix-api-url }}" != '' ]; then
+          echo "SVIX_API_URL=${{ inputs.svix-api-url }}" >> $GITHUB_ENV
+          exit 0
         fi
+
+        REGION_CODE=$(echo ${{ inputs.svix-api-key }} | cut -d '.' -f 2)
+        case $REGION_CODE in
+          us)
+            SVIX_API_URL="api.us.svix.com"
+            ;;
+          eu)
+            SVIX_API_URL="api.eu.svix.com"
+            ;;
+          *)
+            SVIX_API_URL="api.svix.com"
+            ;;
+        esac
+        echo "SVIX_API_URL=$SVIX_API_URL" >> $GITHUB_ENV
       shell: bash
     - name: Upload OpenAPI spec to Svix
       run: |
         TMP_PAYLOAD=$(mktemp)
         python3 -c "import json; print(json.dumps({'specRaw': open('./${{inputs.openapi-file}}','r').read()}))" > $TMP_PAYLOAD
 
-        echo "Uploading OpenAPI spec to api.${{inputs.svix-region}}.svix.com/api/v1/event-type/import/openapi/"
+        echo "Uploading OpenAPI spec to https://$SVIX_API_URL/api/v1/event-type/import/openapi/"
 
-        curl --fail-with-body -X 'POST' 'https://api.${{inputs.svix-region}}.svix.com/api/v1/event-type/import/openapi/' \
+        curl --fail-with-body -X 'POST' "https://$SVIX_API_URL/api/v1/event-type/import/openapi/" \
             -H 'Authorization: Bearer ${{ inputs.svix-api-key }}' \
             -H 'Accept: application/json' \
             -H 'Content-Type: application/json' \
