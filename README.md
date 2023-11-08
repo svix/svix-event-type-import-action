@@ -22,10 +22,10 @@ Location of the OpenAPI spec file (can be in JSON or YAML format).
 **Required**  
 Your [Svix API key](https://docs.svix.com/api-keys). 
 
-### `svix-region`
+### `svix-api-url`
 
-**Optional** (default is `us`)  
-The Svix region you want to upload to. The options are `us` and `eu`.
+**Optional**
+Override the Svix API URL. If not set, the URL will be determined using the API Key.
 
 ## Usage
 
@@ -37,7 +37,6 @@ To use this GitHub Action in your workflow, you can add the following step:
   with:
     openapi-file: 'path/to/your/openapi-spec.yml'
     svix-api-key: ${{ secrets.SVIX_API_KEY }}
-    svix-region: 'eu' # Optional, default is 'us'
 ```
 
 ## Documentation
