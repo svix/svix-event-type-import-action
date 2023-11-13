@@ -33,7 +33,7 @@ To use this GitHub Action in your workflow, you can add the following step:
 
 ```yaml
 - name: Upload Event Types to Svix
-  uses: svix/svix-event-type-import-action@v1
+  uses: svix/svix-event-type-import-action@v2.0.0
   with:
     openapi-file: 'path/to/your/openapi-spec.yml'
     svix-api-key: ${{ secrets.SVIX_API_KEY }}
