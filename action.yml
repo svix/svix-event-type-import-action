@@ -1,5 +1,8 @@
 name: "Upload Event Types to Svix"
 description: "Upload Event Types from an OpenAPI spec to Svix"
+branding:
+  icon: 'copy'
+  color: 'blue'
 inputs:
   openapi-file:
     description: "Location of the OpenAPI spec file (JSON or YAML)"
