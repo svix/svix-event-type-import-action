@@ -1,15 +1,19 @@
-name: 'Upload Event Types to Svix'
-description: 'Upload Event Types from an OpenAPI spec to Svix'
+name: "Upload Event Types to Svix"
+description: "Upload Event Types from an OpenAPI spec to Svix"
 inputs:
   openapi-file:
-    description: 'Location of the OpenAPI spec file (JSON or YAML)'
+    description: "Location of the OpenAPI spec file (JSON or YAML)"
     required: true
   svix-api-key:
-    description: 'Svix API key'
+    description: "Svix API key"
     required: true
   svix-api-url:
-    description: 'Override Svix API URL'
+    description: "Override Svix API URL"
     required: false
+  replace-all:
+    description: "Archive all existing event types that are not in the OpenAPI spec"
+    required: false
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -44,7 +48,7 @@ runs:
     - name: Upload OpenAPI spec to Svix
       run: |
         TMP_PAYLOAD=$(mktemp)
-        python3 -c "import json; print(json.dumps({'specRaw': open('./${{inputs.openapi-file}}','r').read()}))" > $TMP_PAYLOAD
+        python3 -c "import json; print(json.dumps({'specRaw': open('./${{inputs.openapi-file}}','r').read(), 'replaceAll': 'true' == '${{inputs.replace-all == 'true' || inputs.replace-all == true}}' }))" > $TMP_PAYLOAD
 
         echo "Uploading OpenAPI spec to https://$SVIX_API_URL/api/v1/event-type/import/openapi/"
 
