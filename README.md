@@ -27,7 +27,7 @@ Your [Svix API key](https://docs.svix.com/api-keys).
 **Optional**
 Override the Svix API URL. If not set, the URL will be determined using the API Key.
 
-### replace-all
+### `replace-all`
 **Optional**
 If true, archives all existing event types that are not in the OpenAPI spec. Default: `false`.
 
