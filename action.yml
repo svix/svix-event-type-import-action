@@ -42,6 +42,12 @@ runs:
           eu)
             SVIX_API_URL="api.eu.svix.com"
             ;;
+          ca)
+            SVIX_API_URL="api.ca.svix.com"
+            ;;
+          au)
+            SVIX_API_URL="api.au.svix.com"
+            ;;
           *)
             SVIX_API_URL="api.svix.com"
             ;;
